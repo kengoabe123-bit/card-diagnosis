@@ -26,8 +26,7 @@ export default function DiagnosisPage() {
         const animate = (now: number) => {
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            const eased = easeOutCubic(progress);
-            setDisplayRates(targetRates.map((target) => Math.round(eased * target)));
+            setDisplayRates(targetRates.map((target) => Math.round(easeOutCubic(progress) * target)));
             if (progress < 1) requestAnimationFrame(animate);
         };
         const timer = setTimeout(() => requestAnimationFrame(animate), 800);
@@ -49,29 +48,25 @@ export default function DiagnosisPage() {
         setAnimationClass('animate-slide-in');
     }, []);
 
-    const handleAnswer = useCallback(
-        (optionIndex: number) => {
-            if (animatingRef.current) return;
-            animatingRef.current = true;
-            const newAnswers = [...answers, optionIndex];
-            setAnswers(newAnswers);
-            if (currentQuestion < questions.length - 1) {
-                setAnimationClass('animate-slide-out');
-                setTimeout(() => {
-                    setCurrentQuestion((prev) => prev + 1);
-                    setAnimationClass('animate-slide-in');
-                    animatingRef.current = false;
-                }, 300);
-            } else {
-                const diagnosisResults = calculateResults(newAnswers);
-                setResults(diagnosisResults);
-                setDisplayRates([0, 0, 0]);
-                setPhase('results');
+    const handleAnswer = useCallback((optionIndex: number) => {
+        if (animatingRef.current) return;
+        animatingRef.current = true;
+        const newAnswers = [...answers, optionIndex];
+        setAnswers(newAnswers);
+        if (currentQuestion < questions.length - 1) {
+            setAnimationClass('animate-slide-out');
+            setTimeout(() => {
+                setCurrentQuestion((prev) => prev + 1);
+                setAnimationClass('animate-slide-in');
                 animatingRef.current = false;
-            }
-        },
-        [answers, currentQuestion]
-    );
+            }, 300);
+        } else {
+            setResults(calculateResults(newAnswers));
+            setDisplayRates([0, 0, 0]);
+            setPhase('results');
+            animatingRef.current = false;
+        }
+    }, [answers, currentQuestion]);
 
     const handleBack = useCallback(() => {
         if (currentQuestion > 0 && !animatingRef.current) {
@@ -95,47 +90,36 @@ export default function DiagnosisPage() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, []);
 
-    const handleShare = useCallback(
-        (platform: 'x' | 'line' | 'copy') => {
-            if (results.length === 0) return;
-            const topResult = results[0];
-            const shareText = `あなたにピッタリのクレカは【${topResult.service.name}】（おすすめ度${topResult.matchRate}%）でした！\n\n💳 無料クレカ診断はこちら 👇\n${SITE_CONFIG.url}/diagnosis\n\n#クレカ診断 #クレジットカード #CardMatch`;
-            if (platform === 'x') {
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
-            } else if (platform === 'line') {
-                window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(SITE_CONFIG.url + '/diagnosis')}&text=${encodeURIComponent(shareText)}`, '_blank');
-            } else {
-                navigator.clipboard.writeText(shareText).then(() => {
-                    setCopiedToast(true);
-                    setTimeout(() => setCopiedToast(false), 2000);
-                });
-            }
-        },
-        [results]
-    );
+    const handleShare = useCallback((platform: 'x' | 'line' | 'copy') => {
+        if (results.length === 0) return;
+        const topResult = results[0];
+        const shareText = `あなたにピッタリのクレカは「${topResult.service.name}」（おすすめ度${topResult.matchRate}%）でした！\n\n無料クレカ診断はこちら\n${SITE_CONFIG.url}/diagnosis`;
+        if (platform === 'x') {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        } else if (platform === 'line') {
+            window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(SITE_CONFIG.url + '/diagnosis')}&text=${encodeURIComponent(shareText)}`, '_blank');
+        } else {
+            navigator.clipboard.writeText(shareText).then(() => {
+                setCopiedToast(true);
+                setTimeout(() => setCopiedToast(false), 2000);
+            });
+        }
+    }, [results]);
 
     if (phase === 'intro') {
         return (
             <section className="intro-section">
                 <div className="intro-content">
-                    <div className="intro-icon">💳</div>
-                    <h1>あなたにピッタリの<br /><span className="gradient-text">クレカ無料診断</span></h1>
-                    <p>7つの質問に答えるだけで、ライフスタイルに合った最適なクレジットカードがわかります。</p>
-                    <div className="intro-features glass-card">
-                        <div className="intro-feature">
-                            <div className="intro-feature-icon">⏱️</div>
-                            <div className="intro-feature-text">たった30秒</div>
-                        </div>
-                        <div className="intro-feature">
-                            <div className="intro-feature-icon">🎯</div>
-                            <div className="intro-feature-text">パーソナライズ</div>
-                        </div>
-                        <div className="intro-feature">
-                            <div className="intro-feature-icon">💯</div>
-                            <div className="intro-feature-text">完全無料</div>
-                        </div>
+                    <h1>選び方ひとつで、<br />毎日がもっとお得に。</h1>
+                    <p>7つの質問に答えるだけで、あなたにピッタリのクレカがわかります。</p>
+                    <div className="intro-features">
+                        <span className="intro-feature">約30秒で完了</span>
+                        <span className="intro-feature">7問の簡単な質問</span>
+                        <span className="intro-feature">個人情報不要</span>
                     </div>
-                    <button className="btn-primary" onClick={handleStart} id="start-diagnosis">💳 診断をはじめる</button>
+                    <button className="btn-primary" onClick={handleStart} id="start-diagnosis">
+                        無料で診断する
+                    </button>
                 </div>
             </section>
         );
@@ -143,31 +127,31 @@ export default function DiagnosisPage() {
 
     if (phase === 'questions') {
         const question = questions[currentQuestion];
-        const progress = ((currentQuestion + 1) / questions.length) * 100;
+        const progressPercent = Math.round(((currentQuestion + 1) / questions.length) * 100);
         return (
             <section className="question-section">
                 <div className="progress-container">
+                    <span className="progress-label">質問 {currentQuestion + 1} / {questions.length}</span>
                     <div className="progress-bar-bg">
-                        <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+                        <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
                     </div>
-                    <div className="progress-text">{currentQuestion + 1} / {questions.length}</div>
+                    <span className="progress-text">{progressPercent}%</span>
                 </div>
-                <div className={`question-card glass-card ${animationClass}`} key={`q-${currentQuestion}`}>
+                <div className={`question-card ${animationClass}`} key={`q-${currentQuestion}`}>
                     <div className="question-header">
-                        <div className="question-icon">{question.icon}</div>
+                        <div className="question-number">{currentQuestion + 1}</div>
                         <div className="question-text">{question.text}</div>
                         {question.subtext && <div className="question-subtext">{question.subtext}</div>}
                     </div>
                     <div className="options-list">
                         {question.options.map((option, index) => (
                             <button key={index} className="option-btn" onClick={() => handleAnswer(index)} id={`option-${currentQuestion}-${index}`}>
-                                <span className="option-emoji">{option.icon}</span>
                                 <span>{option.label}</span>
                             </button>
                         ))}
                     </div>
                     {currentQuestion > 0 && (
-                        <button className="back-btn" onClick={handleBack}>← 前の質問に戻る</button>
+                        <button className="back-btn" onClick={handleBack}>前の質問に戻る</button>
                     )}
                 </div>
             </section>
@@ -178,14 +162,14 @@ export default function DiagnosisPage() {
         <>
             {showConfetti && (
                 <div className="confetti-container">
-                    {Array.from({ length: 50 }).map((_, i) => (
+                    {Array.from({ length: 40 }).map((_, i) => (
                         <div key={i} className="confetti-piece" style={{
                             left: `${Math.random() * 100}%`,
-                            backgroundColor: ['#f59e0b', '#ef4444', '#fbbf24', '#f97316', '#10b981', '#6366f1'][Math.floor(Math.random() * 6)],
+                            backgroundColor: ['#5BA4B5', '#7ec8d8', '#a8dce8', '#f0c27f', '#e8b4b8', '#b8d4e3'][Math.floor(Math.random() * 6)],
                             animationDuration: `${2 + Math.random() * 3}s`,
                             animationDelay: `${Math.random() * 2}s`,
-                            width: `${6 + Math.random() * 8}px`,
-                            height: `${6 + Math.random() * 8}px`,
+                            width: `${6 + Math.random() * 6}px`,
+                            height: `${6 + Math.random() * 6}px`,
                             borderRadius: Math.random() > 0.5 ? '50%' : '2px',
                         }} />
                     ))}
@@ -193,17 +177,15 @@ export default function DiagnosisPage() {
             )}
             <section className="results-section">
                 <div className="results-header">
-                    <h2>あなたにおすすめの<span className="gradient-text">クレカ TOP3</span></h2>
+                    <h2>あなたにおすすめのクレカ TOP3</h2>
                     <p className="results-subtitle">回答を分析し、あなたに最適なクレジットカードを選びました</p>
                 </div>
                 <div className="results-list">
                     {results.map((result, index) => (
-                        <div key={result.service.id} className="result-card glass-card" style={{ '--card-color': result.service.color } as React.CSSProperties}>
+                        <div key={result.service.id} className="result-card">
                             <div className="result-card-header">
-                                <div className="result-match-rate">
-                                    <div className="match-label">おすすめ度</div>
-                                    <div className="match-number gradient-text">{displayRates[index]}<span className="percent">%</span></div>
-                                </div>
+                                <div className="match-label">おすすめ度</div>
+                                <div className="match-number">{displayRates[index]}<span className="percent">%</span></div>
                             </div>
                             <div className="result-card-body">
                                 <h3 className="result-name">{result.service.name}</h3>
@@ -212,27 +194,21 @@ export default function DiagnosisPage() {
                                     {result.service.targetAge.map((age) => (<span key={age} className="age-tag">{age}</span>))}
                                 </div>
                                 <div className="reason-box">
-                                    <div className="reason-label">📋 あなたの回答に基づくおすすめ理由</div>
+                                    <div className="reason-label">あなたの回答に基づくおすすめ理由</div>
                                     <div className="reason-text">{result.reason}</div>
                                 </div>
                                 <div className="result-features">
-                                    <h4>✨ 特徴</h4>
-                                    <ul className="feature-list">
-                                        {result.service.features.map((f, i) => (<li key={i}>{f}</li>))}
-                                    </ul>
+                                    <h4>特徴</h4>
+                                    <ul className="feature-list">{result.service.features.map((f, i) => (<li key={i}>{f}</li>))}</ul>
                                 </div>
                                 <div className="result-pros-cons">
                                     <div>
                                         <h4>メリット</h4>
-                                        <ul className="pros-list">
-                                            {result.service.pros.slice(0, 3).map((p, i) => (<li key={i}>{p}</li>))}
-                                        </ul>
+                                        <ul className="pros-list">{result.service.pros.slice(0, 3).map((p, i) => (<li key={i}>{p}</li>))}</ul>
                                     </div>
                                     <div>
                                         <h4>デメリット</h4>
-                                        <ul className="cons-list">
-                                            {result.service.cons.slice(0, 2).map((c, i) => (<li key={i}>{c}</li>))}
-                                        </ul>
+                                        <ul className="cons-list">{result.service.cons.slice(0, 2).map((c, i) => (<li key={i}>{c}</li>))}</ul>
                                     </div>
                                 </div>
                                 <a href={result.service.affiliateUrl} target="_blank" rel="noopener noreferrer" className="btn-cta" style={{ background: result.service.color }} id={`cta-${result.service.id}`}>
@@ -242,19 +218,19 @@ export default function DiagnosisPage() {
                         </div>
                     ))}
                 </div>
-                <div className="share-section glass-card">
-                    <h3>🔗 診断結果をシェアする</h3>
+                <div className="share-section">
+                    <h3>診断結果をシェアする</h3>
                     <div className="share-buttons">
-                        <button className="share-btn x" onClick={() => handleShare('x')} id="share-x">𝕏 でシェア</button>
+                        <button className="share-btn x" onClick={() => handleShare('x')} id="share-x">X でシェア</button>
                         <button className="share-btn line" onClick={() => handleShare('line')} id="share-line">LINEで送る</button>
-                        <button className="share-btn copy" onClick={() => handleShare('copy')} id="share-copy">📋 コピー</button>
+                        <button className="share-btn copy" onClick={() => handleShare('copy')} id="share-copy">コピー</button>
                     </div>
                 </div>
                 <div className="retry-section">
-                    <button className="btn-secondary" onClick={handleRestart} id="retry-diagnosis">🔄 もう一度診断する</button>
+                    <button className="btn-secondary" onClick={handleRestart} id="retry-diagnosis">もう一度診断する</button>
                 </div>
             </section>
-            <div className={`copied-toast${copiedToast ? ' show' : ''}`}>✅ コピーしました！</div>
+            <div className={`copied-toast${copiedToast ? ' show' : ''}`}>コピーしました</div>
         </>
     );
 }

@@ -4,39 +4,21 @@ export default function Home() {
   return (
     <section className="hero">
       <div className="hero-content">
-        <div className="hero-icon">💳</div>
         <h1>
-          あなたにピッタリの
+          選び方ひとつで、
           <br />
-          <span className="gradient-text">クレカ無料診断</span>
+          毎日がもっとお得に。
         </h1>
-        <p>
-          7つの質問に答えるだけで、あなたのライフスタイルに合った
-          <br />
-          最適なクレジットカードが見つかります。
-        </p>
+        <p>あなたにピッタリのクレジットカードを見つける無料診断</p>
 
-        <div className="features glass-card">
-          <div className="feature-item">
-            <div className="feature-icon">⏱️</div>
-            <div className="feature-label">たった30秒</div>
-          </div>
-          <div className="feature-item">
-            <div className="feature-icon">🎯</div>
-            <div className="feature-label">あなた専用の結果</div>
-          </div>
-          <div className="feature-item">
-            <div className="feature-icon">🔬</div>
-            <div className="feature-label">徹底比較</div>
-          </div>
-          <div className="feature-item">
-            <div className="feature-icon">💯</div>
-            <div className="feature-label">完全無料</div>
-          </div>
+        <div className="hero-features">
+          <span className="hero-feature">約30秒で完了</span>
+          <span className="hero-feature">7問の簡単な質問</span>
+          <span className="hero-feature">個人情報不要</span>
         </div>
 
         <Link href="/diagnosis" className="btn-primary" id="start-diagnosis-hero">
-          💳 無料でクレカ診断を始める
+          無料で診断する
         </Link>
       </div>
     </section>
