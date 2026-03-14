@@ -1,0 +1,22 @@
+{
+    "rakuten": {
+        "url": "https://example.com/rakuten-card",
+        "note": "楽天カード - A8で取得後に差し替え"
+    },
+    "smbc-nl": {
+        "url": "https://example.com/smbc-nl",
+        "note": "三井住友カード(NL) - A8で取得後に差し替え"
+    },
+    "jcb-w": {
+        "url": "https://example.com/jcb-w",
+        "note": "JCB CARD W - A8で取得後に差し替え"
+    },
+    "epos": {
+        "url": "https://example.com/epos",
+        "note": "エポスカード - A8で取得後に差し替え"
+    },
+    "amex-gold": {
+        "url": "https://example.com/amex-gold",
+        "note": "アメックスゴールド - A8で取得後に差し替え"
+    }
+}
