@@ -4,6 +4,7 @@ export const metadata: Metadata = {
     title: 'クレカ診断 | CardMatch - あなたに最適なクレジットカードを見つけよう',
     description:
         '7つの質問に答えるだけで、あなたのライフスタイルに最適なクレジットカードがわかります。利用シーン・年会費・ポイント還元から総合的に分析。',
+  other: { link: [{ rel: 'preload', href: '/results-bg.webp', as: 'image', type: 'image/webp' }] },
 };
 
 export default function DiagnosisLayout({
