@@ -52,7 +52,7 @@ export const services: Service[] = [
             '初めてクレカを作る人',
         ],
         affiliateUrl: 'https://example.com/rakuten-card',
-        ctaText: '楽天カードを申し込む',
+        ctaText: '詳細を見る',
         color: '#bf0000',
     },
     {
@@ -89,7 +89,7 @@ export const services: Service[] = [
             '初めてのクレカに安心感が欲しい人',
         ],
         affiliateUrl: 'https://example.com/smbc-nl',
-        ctaText: '三井住友カード(NL)を申し込む',
+        ctaText: '詳細を見る',
         color: '#00a650',
     },
     {
@@ -126,7 +126,7 @@ export const services: Service[] = [
             '年会費無料で高還元のカードを探している人',
         ],
         affiliateUrl: 'https://example.com/jcb-w',
-        ctaText: 'JCB CARD Wを申し込む',
+        ctaText: '詳細を見る',
         color: '#0070c0',
     },
     {
@@ -163,7 +163,7 @@ export const services: Service[] = [
             'マルイでよく買い物する人',
         ],
         affiliateUrl: 'https://example.com/epos',
-        ctaText: 'エポスカードを申し込む',
+        ctaText: '詳細を見る',
         color: '#e60012',
     },
     {
@@ -200,7 +200,7 @@ export const services: Service[] = [
             '接待やビジネスシーンで使いたい人',
         ],
         affiliateUrl: 'https://example.com/amex-gold',
-        ctaText: 'アメックスゴールドを申し込む',
+        ctaText: '詳細を見る',
         color: '#b38600',
     },
 ];
