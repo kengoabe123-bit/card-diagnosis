@@ -203,6 +203,43 @@ export const services: Service[] = [
         ctaText: '詳細を見る',
         color: '#b38600',
     },
+    {
+        id: 'nexus-card',
+        slug: 'nexus-card',
+        name: 'Nexus Card',
+        nameEn: 'Nexus Card',
+        tagline: 'デポジット型だから審査に不安がある人も安心',
+        description: 'デポジット（保証金）を預けることで発行できるクレジットカード。過去に審査に落ちた経験がある方や、信用情報に不安がある方でも持てるクレジットカード。Mastercard加盟店で利用可能。',
+        category: 'デポジット型カード',
+        target: '審査に不安がある人・クレヒスを積みたい人',
+        targetAge: ['20代', '30代', '40代', '50代'],
+        features: [
+            'デポジット（保証金）型で審査に通りやすい',
+            'Mastercard加盟店で世界中で利用可能',
+            'クレジットヒストリーを積める',
+            'デポジットは解約時に全額返還',
+        ],
+        pros: [
+            '審査に不安がある方でも申し込める',
+            'クレヒスを積んで将来のカード発行に有利',
+            'デポジットは解約時に返ってくる',
+            'Mastercardブランドで使える場所が多い',
+        ],
+        cons: [
+            '最初にデポジット（保証金）が必要',
+            '年会費がかかる',
+            'ポイント還元率は一般カードより低め',
+        ],
+        recommended: [
+            '過去にクレカ審査に落ちた経験がある人',
+            '信用情報に不安がある人',
+            'クレジットヒストリーをゼロから積みたい人',
+            'どうしてもクレジットカードが必要な人',
+        ],
+        affiliateUrl: 'https://px.a8.net/svt/ejp?a8mat=4AZGC7+AMTYGY+4T5W+60WN6',
+        ctaText: 'Nexus Cardを申し込む',
+        color: '#455a64',
+    },
 ];
 
 export function getServiceBySlug(slug: string): Service | undefined {
